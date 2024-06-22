@@ -1,0 +1,6 @@
+{
+  "name": "Craftify",
+  "description": "Provides a TIDAL-HiFi compatable API server.",
+  "author": "toonlink",
+  "main": "./src/index.js"
+}
