@@ -38,10 +38,7 @@ ws.onopen = () => {
             pid: 2094112,
             activity: {
               ...(paused
-                ? {
-                    smallImageKey: "paused-icon",
-                    smallImageText: "Paused",
-                  }
+                ? {}
                 : {
                     startTimestamp: now,
                     endTimestamp: remaining,
@@ -51,10 +48,18 @@ ws.onopen = () => {
               details: formatLongString(
                 "by " + currentlyPlaying.artists.map((a) => a.name).join(", ")
               ),
-              largeImageKey: albumArtURL,
-              largeImageText: `on ${formatLongString(
-                currentlyPlaying.album.title
-              )}`,
+              assets: {
+                large_image: albumArtURL,
+                large_text: `on ${formatLongString(
+                  currentlyPlaying.album.title
+                )}`,
+                ...(paused
+                  ? {
+                      small_image: "paused-icon",
+                      small_text: "Paused",
+                    }
+                  : {}),
+              },
             },
           },
         })
