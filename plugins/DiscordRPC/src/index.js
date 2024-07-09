@@ -39,12 +39,12 @@ ws.onopen = () => {
             activity: {
               timestamps: {
                 ...(paused
-                ? {}
-                : {
-                    start: now,
-                    end: remaining,
-                  }),
-              }
+                  ? {}
+                  : {
+                      start: now,
+                      end: remaining,
+                    }),
+              },
               type: 2,
               name: formatLongString(currentlyPlaying.title),
               details: formatLongString(
