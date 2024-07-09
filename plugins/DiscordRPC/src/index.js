@@ -11,7 +11,7 @@ storage.keepRpcOnPause ??= true;
 
 const formatLongString = (s) => (s.length >= 128 ? s.slice(0, 125) + "..." : s);
 
-const rpc = new AutoClient({ transport: "ipc" });
+const rpc = new AutoClient({ transport: "ws" });
 const client = rpc.endlessLogin({ clientId });
 
 client.then(() => {

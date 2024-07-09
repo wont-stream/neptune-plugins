@@ -1,10 +1,4 @@
-//https://github.com/saucesteals/discord-auto-rpc
-
-let DiscordRPC;
-
-import("./discord-rpc-revamp.js").then((pkg) => {
-  DiscordRPC = pkg;
-});
+import DiscordRPC from "discord-rpc";
 
 export class AutoClient extends DiscordRPC.Client {
   closeinterval;
@@ -16,7 +10,7 @@ export class AutoClient extends DiscordRPC.Client {
   constructor(options) {
     super(options);
 
-    if (options.transport == "ipc") {
+    if (options.transport == "ws") {
       this.transport.on("close", this.onClose.bind(this));
     }
   }
@@ -76,4 +70,4 @@ export class AutoClient extends DiscordRPC.Client {
   }
 }
 
-export * from "./discord-rpc-revamp.js";
+export * from "discord-rpc";
