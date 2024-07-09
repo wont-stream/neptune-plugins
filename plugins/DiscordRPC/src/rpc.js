@@ -1,4 +1,4 @@
-import DiscordRPC from "discord-rpc";
+import DiscordRPC from "./ws.js";
 
 export class AutoClient extends DiscordRPC.Client {
   closeinterval;
@@ -70,4 +70,4 @@ export class AutoClient extends DiscordRPC.Client {
   }
 }
 
-export * from "discord-rpc";
+export * from "./ws.js";
