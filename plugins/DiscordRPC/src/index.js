@@ -5,10 +5,11 @@ const unloadables = [];
 
 const formatLongString = (s) => (s.length >= 128 ? s.slice(0, 125) + "..." : s);
 
-let ws, tries;
+let ws;
+let tries;
 
 const connect = async () => {
-  const port = 6463 + (this.tries % 10);
+  const port = 6463 + (tries % 10);
 
   tries += 1;
 
@@ -18,12 +19,12 @@ const connect = async () => {
 };
 
 const send = (data) => {
-  this.ws.send(JSON.stringify(data));
+  ws.send(JSON.stringify(data));
 };
 
 const close = () => {
   return new Promise((r) => {
-    this.ws.close();
+    ws.close();
     r();
   });
 };
@@ -84,41 +85,4 @@ export async function onUnload() {
   try {
     close();
   } catch {}
-}
-
-class WebSocketTransport {
-  constructor() {
-    this.ws = null;
-
-    this.tries = 0;
-  }
-
-  async connect() {
-    const port = 6463 + (this.tries % 10);
-
-    this.tries += 1;
-
-    this.ws = new WebSocket(
-      `ws://127.0.0.1:${port}/?v=1&client_id=1130698654987067493`
-    );
-
-    this.ws.onopen = this.onOpen.bind(this);
-
-    this.ws.onclose = this.onClose.bind(this);
-
-    this.ws.onerror = this.onError.bind(this);
-
-    this.ws.onmessage = this.onMessage.bind(this);
-  }
-
-  send(data) {
-    this.ws.send(JSON.stringify(data));
-  }
-
-  close() {
-    return new Promise((r) => {
-      this.ws.close();
-      r();
-    });
-  }
 }
