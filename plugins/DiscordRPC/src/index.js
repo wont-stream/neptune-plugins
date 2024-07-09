@@ -5,9 +5,30 @@ const unloadables = [];
 
 const formatLongString = (s) => (s.length >= 128 ? s.slice(0, 125) + "..." : s);
 
-const ws = new WebSocketTransport(() => {});
+let ws, tries;
 
-ws.connect().then(() => {
+const connect = async () => {
+  const port = 6463 + (this.tries % 10);
+
+  tries += 1;
+
+  ws = new WebSocket(
+    `ws://127.0.0.1:${port}/?v=1&client_id=1130698654987067493`
+  );
+};
+
+const send = (data) => {
+  this.ws.send(JSON.stringify(data));
+};
+
+const close = () => {
+  return new Promise((r) => {
+    this.ws.close();
+    r();
+  });
+};
+
+connect().then(() => {
   unloadables.push(
     intercept("playbackControls/TIME_UPDATE", ([current]) => {
       const state = store.getState();
@@ -27,7 +48,7 @@ ws.connect().then(() => {
 
       const paused = state.playbackControls.playbackState == "NOT_PLAYING";
 
-      ws.send({
+      send({
         cmd: "SET_ACTIVITY",
         args: {
           pid: 2094112,
@@ -61,23 +82,15 @@ export async function onUnload() {
   unloadables.forEach((u) => u());
 
   try {
-    ws.close();
+    close();
   } catch {}
 }
 
 class WebSocketTransport {
-  constructor(cb) {
-    this.cb = cb;
+  constructor() {
     this.ws = null;
 
     this.tries = 0;
-  }
-
-  emit(evt, data) {
-    this.cb(evt, data);
-  }
-  once(evt, data) {
-    this.cb(evt, data);
   }
 
   async connect() {
@@ -98,47 +111,14 @@ class WebSocketTransport {
     this.ws.onmessage = this.onMessage.bind(this);
   }
 
-  onOpen() {
-    this.emit("open");
-  }
-
-  onClose(event) {
-    if (!event.wasClean) {
-      return;
-    }
-
-    this.emit("close", event);
-  }
-
-  onError(event) {
-    try {
-      this.ws.close();
-    } catch {} // eslint-disable-line no-empty
-
-    if (this.tries > 20) {
-      this.emit("error", event.error);
-    } else {
-      setTimeout(() => {
-        this.connect();
-      }, 250);
-    }
-  }
-
-  onMessage(event) {
-    this.emit("message", JSON.parse(event.data));
-  }
-
   send(data) {
     this.ws.send(JSON.stringify(data));
   }
 
-  ping() {} // eslint-disable-line no-empty-function
-
   close() {
     return new Promise((r) => {
-      this.once("close", r);
-
       this.ws.close();
+      r();
     });
   }
 }
