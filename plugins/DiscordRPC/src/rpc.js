@@ -2,7 +2,7 @@
 
 let DiscordRPC;
 
-import("discord-rpc-revamp").then((pkg) => {
+import("./discord-rpc-revamp.js").then((pkg) => {
   DiscordRPC = pkg;
 });
 
@@ -76,4 +76,4 @@ export class AutoClient extends DiscordRPC.Client {
   }
 }
 
-export * from "discord-rpc-revamp";
+export * from "./discord-rpc-revamp.js";
