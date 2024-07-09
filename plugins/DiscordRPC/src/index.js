@@ -9,9 +9,20 @@ let ws = new WebSocket(
   `ws://127.0.0.1:6463/?v=1&client_id=1130698654987067493`
 );
 
-ws.op;
+ws.onclose = () => {
+  unloadables.forEach((u) => u());
+  unloadables = [];
 
-ws.onopen = () => {
+  setTimeout(() => {
+    ws = new WebSocket(
+      `ws://127.0.0.1:6463/?v=1&client_id=1130698654987067493`
+    );
+  }, 5000);
+};
+
+ws.onopen = open;
+
+const open = () => {
   unloadables.push(
     intercept("playbackControls/TIME_UPDATE", ([current]) => {
       const state = store.getState();
