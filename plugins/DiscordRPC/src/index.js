@@ -1,6 +1,6 @@
 import { store, intercept, currentMediaItem } from "@neptune";
 import { getMediaURLFromID } from "@neptune/utils";
-import { AutoClient } from "discord-auto-rpc";
+import { AutoClient } from "./rpc.js";
 import { html } from "@neptune/voby";
 import { storage } from "@plugin";
 
@@ -77,7 +77,7 @@ export function Settings() {
         id="keep-rpc-on-pause"
         type="checkbox"
         checked=${storage.keepRpcOnPause}
-        onChange=${(e) => storage.keepRpcOnPause = e.target.checked}
+        onChange=${(e) => (storage.keepRpcOnPause = e.target.checked)}
       />
     </div>
   `;
