@@ -5,18 +5,9 @@ const unloadables = [];
 
 const formatLongString = (s) => (s.length >= 128 ? s.slice(0, 125) + "..." : s);
 
-let ws;
-let tries;
-
-const connect = async () => {
-  const port = 6463 + (tries % 10);
-
-  tries += 1;
-
-  ws = new WebSocket(
-    `ws://127.0.0.1:${port}/?v=1&client_id=1130698654987067493`
-  );
-};
+let ws = new WebSocket(
+  `ws://127.0.0.1:6463/?v=1&client_id=1130698654987067493`
+);
 
 const send = (data) => {
   ws.send(JSON.stringify(data));
@@ -29,7 +20,7 @@ const close = () => {
   });
 };
 
-connect().then(() => {
+ws.onopen(() => {
   unloadables.push(
     intercept("playbackControls/TIME_UPDATE", ([current]) => {
       const state = store.getState();
