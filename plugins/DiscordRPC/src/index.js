@@ -9,18 +9,9 @@ let ws = new WebSocket(
   `ws://127.0.0.1:6463/?v=1&client_id=1130698654987067493`
 );
 
-const send = (data) => {
-  ws.send(JSON.stringify(data));
-};
+ws.op;
 
-const close = () => {
-  return new Promise((r) => {
-    ws.close();
-    r();
-  });
-};
-
-ws.onopen(() => {
+ws.onopen = () => {
   unloadables.push(
     intercept("playbackControls/TIME_UPDATE", ([current]) => {
       const state = store.getState();
@@ -40,40 +31,42 @@ ws.onopen(() => {
 
       const paused = state.playbackControls.playbackState == "NOT_PLAYING";
 
-      send({
-        cmd: "SET_ACTIVITY",
-        args: {
-          pid: 2094112,
-          activity: {
-            ...(paused
-              ? {
-                  smallImageKey: "paused-icon",
-                  smallImageText: "Paused",
-                }
-              : {
-                  startTimestamp: now,
-                  endTimestamp: remaining,
-                }),
-            type: 2,
-            name: formatLongString(currentlyPlaying.title),
-            details: formatLongString(
-              "by " + currentlyPlaying.artists.map((a) => a.name).join(", ")
-            ),
-            largeImageKey: albumArtURL,
-            largeImageText: `on ${formatLongString(
-              currentlyPlaying.album.title
-            )}`,
+      ws.send(
+        JSON.stringify({
+          cmd: "SET_ACTIVITY",
+          args: {
+            pid: 2094112,
+            activity: {
+              ...(paused
+                ? {
+                    smallImageKey: "paused-icon",
+                    smallImageText: "Paused",
+                  }
+                : {
+                    startTimestamp: now,
+                    endTimestamp: remaining,
+                  }),
+              type: 2,
+              name: formatLongString(currentlyPlaying.title),
+              details: formatLongString(
+                "by " + currentlyPlaying.artists.map((a) => a.name).join(", ")
+              ),
+              largeImageKey: albumArtURL,
+              largeImageText: `on ${formatLongString(
+                currentlyPlaying.album.title
+              )}`,
+            },
           },
-        },
-      });
+        })
+      );
     })
   );
-});
+};
 
 export async function onUnload() {
   unloadables.forEach((u) => u());
 
   try {
-    close();
+    ws.close();
   } catch {}
 }
