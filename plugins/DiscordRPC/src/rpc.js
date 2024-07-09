@@ -76,4 +76,4 @@ export class AutoClient extends DiscordRPC.Client {
   }
 }
 
-export * from "discord-rpc";
+export * from "discord-rpc-revamp";
