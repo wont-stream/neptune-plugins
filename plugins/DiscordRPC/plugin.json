@@ -1,6 +1,6 @@
 {
   "name": "Discord RPC",
-  "description": "Shows what song you're currently listening to on Discord.",
-  "author": "toonlink",
+  "description": "An opinionated arRPC only Discord RPC. (forked from toonlink's plugin)",
+  "author": "wont-stream",
   "main": "./src/index.js"
 }
