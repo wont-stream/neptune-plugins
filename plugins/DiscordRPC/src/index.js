@@ -37,12 +37,14 @@ ws.onopen = () => {
           args: {
             pid: 2094112,
             activity: {
-              ...(paused
+              timestamps: {
+                ...(paused
                 ? {}
                 : {
-                    startTimestamp: now,
-                    endTimestamp: remaining,
+                    start: now,
+                    end: remaining,
                   }),
+              }
               type: 2,
               name: formatLongString(currentlyPlaying.title),
               details: formatLongString(
