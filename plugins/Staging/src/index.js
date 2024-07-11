@@ -4,4 +4,6 @@ location.href = location.href.replace(
   "desktop.stage.tidal.com"
 );
 
-export async function onUnload() {}
+export async function onUnload() {
+  return "not an empty function now!";
+}
