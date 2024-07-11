@@ -39,7 +39,7 @@ ws.onopen = () => {
                 ...(paused
                   ? {}
                   : {
-                      //start: now,
+                      start: now,
                       end: remaining,
                     }),
               },
