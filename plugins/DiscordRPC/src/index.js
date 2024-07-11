@@ -52,7 +52,7 @@ const open = () => {
                 ...(paused
                   ? {}
                   : {
-                      start: now,
+                      //start: now,
                       end: remaining,
                     }),
               },
