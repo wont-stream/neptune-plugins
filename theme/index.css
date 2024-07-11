@@ -48,7 +48,11 @@
 [style="color: rgb(255, 212, 50);"],
 [style="color: rgb(51, 255, 238);"],
 [style="color: rgb(249, 186, 122);"] {
-  color: var(--track-vibrant-color) !important;
+  color: var(--track-vibrant-color);
+}
+
+.betaBadge {
+  display: none;
 }
 
 * {
