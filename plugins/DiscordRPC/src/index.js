@@ -1,5 +1,4 @@
 import { store, intercept, currentMediaItem } from "@neptune";
-import { getMediaURLFromID } from "@neptune/utils";
 
 const unloadables = [];
 
@@ -18,8 +17,6 @@ ws.onopen = () => {
 
       // TODO: add video support
       if (mediaType != "track") return;
-
-      const albumArtURL = getMediaURLFromID(currentlyPlaying.album.cover);
 
       const date = new Date();
       const now = (date.getTime() / 1000) | 0;
@@ -49,7 +46,9 @@ ws.onopen = () => {
                 "by " + currentlyPlaying.artists.map((a) => a.name).join(", ")
               ),
               assets: {
-                large_image: albumArtURL,
+                large_image: `https://resources.tidal.com/images/${currentlyPlaying.album.cover
+                  .split("-")
+                  .join("/")}/80x80.jpg`,
                 large_text: `on ${formatLongString(
                   currentlyPlaying.album.title
                 )}`,
