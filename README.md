@@ -25,3 +25,5 @@ Redirect you to the staging version of the desktop app.
 Copy the following URL to the neptune plugin install page to install Discord RPC: `https://wont-stream.github.io/neptune-plugins/Staging`
 
 <small>Neptune Plugins do NOT work.<small/>
+
+I recommend following [this gist](https://gist.github.com/wont-stream/9a622264c9cc2f7227ee9a264c6d610a) instead of this plugin as it will allow neptune to work properly.
