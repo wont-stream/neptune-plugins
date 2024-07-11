@@ -1,0 +1,6 @@
+{
+  "name": "Staging",
+  "description": "Redirect you to the staging version of the desktop app.",
+  "author": "wont-stream",
+  "main": "./src/index.js"
+}
