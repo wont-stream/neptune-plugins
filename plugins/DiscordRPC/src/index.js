@@ -1,5 +1,3 @@
-import { store, intercept, currentMediaItem } from "@neptune";
-
 const unloadables = [];
 
 const formatLongString = (s) => (s.length >= 128 ? s.slice(0, 125) + "..." : s);
@@ -10,10 +8,9 @@ const ws = new WebSocket(
 
 ws.onopen = () => {
   unloadables.push(
-    intercept("playbackControls/TIME_UPDATE", ([current]) => {
-      const state = store.getState();
-
-      const { item: currentlyPlaying, type: mediaType } = currentMediaItem;
+    neptune.intercept("playbackControls/TIME_UPDATE", ([current]) => {
+      const { item: currentlyPlaying, type: mediaType } =
+        neptune.currentMediaItem;
 
       // TODO: add video support
       if (mediaType != "track") return;
@@ -24,7 +21,9 @@ ws.onopen = () => {
         date.getSeconds() + (currentlyPlaying.duration - current)
       );
 
-      const paused = state.playbackControls.playbackState == "NOT_PLAYING";
+      const paused =
+        neptune.store.getState().playbackControls.playbackState ==
+        "NOT_PLAYING";
 
       ws.send(
         JSON.stringify({
