@@ -1,0 +1,58 @@
+:root {
+  --wave-color-solid-accent-fill: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-blue-fill: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-green-brighter: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-green-dark: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-green-darker: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-green-darkest: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-green-fill: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-orange-fill: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-purple-fill: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-red-bright: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-red-brighter: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-red-dark: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-red-darker: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-red-darkest: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-red-fill: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-yellow-bright: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-yellow-brighter: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-yellow-dark: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-yellow-darker: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-yellow-darkest: var(--track-vibrant-color);
+  --wave-color-solid-rainbow-yellow-fill: var(--track-vibrant-color);
+
+  --wave-color-solid-contrast-fill: var(--track-vibrant-color);
+
+  --wave-color-solid-base-brighter: #030303;
+  --wave-color-opacity-base-brighter-ultra-thick: #030303;
+
+  --user-profile-linear-gradient: linear-gradient(
+    160deg,
+    var(--track-vibrant-color) 1.22%,
+    #0c0c0c 79.07%
+  ) !important;
+}
+
+#sidebar,
+#footerPlayer {
+  background: black;
+}
+
+#feedSidebar,
+[aria-label="Shuffle"],
+[data-test="recent-searches-container"],
+[data-test="query-suggestions"] {
+  background: #030303;
+}
+
+[style="color: rgb(255, 212, 50);"],
+[style="color: rgb(51, 255, 238);"],
+[style="color: rgb(249, 186, 122);"] {
+  color: var(--track-vibrant-color) !important;
+}
+
+* {
+  font-family: "Cabin", sans-serif !important;
+  font-optical-sizing: auto !important;
+  font-variation-settings: "wdth" 100;
+}
