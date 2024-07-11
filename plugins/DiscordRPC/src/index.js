@@ -1,7 +1,7 @@
 import { store, intercept, currentMediaItem } from "@neptune";
 import { getMediaURLFromID } from "@neptune/utils";
 
-const unloadables = [];
+let unloadables = [];
 
 const formatLongString = (s) => (s.length >= 128 ? s.slice(0, 125) + "..." : s);
 
