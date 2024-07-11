@@ -1,0 +1,1 @@
+var t=(e,o)=>()=>(o||e((o={exports:{}}).exports,o),o.exports);var a=t(()=>{if(!location.href.includes("desktop.tidal.com"))return;location.href=location.href.replace("desktop.tidal.com","desktop.stage.tidal.com")});export default a();
