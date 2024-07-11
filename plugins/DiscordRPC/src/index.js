@@ -1,28 +1,15 @@
 import { store, intercept, currentMediaItem } from "@neptune";
 import { getMediaURLFromID } from "@neptune/utils";
 
-let unloadables = [];
+const unloadables = [];
 
 const formatLongString = (s) => (s.length >= 128 ? s.slice(0, 125) + "..." : s);
 
-let ws = new WebSocket(
+const ws = new WebSocket(
   `ws://127.0.0.1:6463/?v=1&client_id=1130698654987067493`
 );
 
-ws.onclose = () => {
-  unloadables.forEach((u) => u());
-  unloadables = [];
-
-  setTimeout(() => {
-    ws = new WebSocket(
-      `ws://127.0.0.1:6463/?v=1&client_id=1130698654987067493`
-    );
-  }, 5000);
-};
-
-ws.onopen = open;
-
-const open = () => {
+ws.onopen = () => {
   unloadables.push(
     intercept("playbackControls/TIME_UPDATE", ([current]) => {
       const state = store.getState();
