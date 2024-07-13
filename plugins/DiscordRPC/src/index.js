@@ -6,6 +6,8 @@ const ws = new WebSocket(
   `ws://127.0.0.1:6463/?v=1&client_id=1130698654987067493`
 );
 
+let int;
+
 ws.onopen = () => {
   unloadables.push(
     neptune.intercept("playbackControls/TIME_UPDATE", ([current]) => {
@@ -65,6 +67,8 @@ ws.onopen = () => {
     })
   );
 };
+
+ws.onclose = () => {await neptune.plugins.reloadPlugin(neptune.plugins.getPluginById("https://wont-stream.github.io/neptune-plugins/DiscordRPC"))}
 
 export async function onUnload() {
   unloadables.forEach((u) => u());
