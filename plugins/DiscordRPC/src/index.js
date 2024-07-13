@@ -2,6 +2,8 @@ const unloadables = [];
 
 const formatLongString = (s) => (s.length >= 128 ? s.slice(0, 125) + "..." : s);
 
+let programaticPause = false;
+
 class WebSocketTransport {
   constructor() {
     this.ws = null;
@@ -40,6 +42,7 @@ class WebSocketTransport {
   onOpen() {
     unloadables.push(
       neptune.intercept("playbackControls/TIME_UPDATE", ([current]) => {
+        if (programaticPause) return;
         const { item: currentlyPlaying, type: mediaType } =
           neptune.currentMediaItem;
 
@@ -96,8 +99,10 @@ class WebSocketTransport {
     );
 
     // get the RPC working.
+    programaticPause = true;
     neptune.actions.playbackControls.pause();
     neptune.actions.playbackControls.play();
+    programaticPause = false;
   }
 
   onClose(event) {
