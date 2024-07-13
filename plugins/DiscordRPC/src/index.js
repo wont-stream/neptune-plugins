@@ -94,6 +94,10 @@ class WebSocketTransport {
           });
       })
     );
+
+    // get the RPC working.
+    neptune.actions.playbackControls.pause();
+    neptune.actions.playbackControls.play();
   }
 
   onClose(event) {
