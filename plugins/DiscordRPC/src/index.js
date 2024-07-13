@@ -30,8 +30,8 @@ class WebSocketTransport {
   }
 
   emit(evt, data) {
-    this._once.forEach((data) => {
-      if (data.evt == evt) return data.cb(data);
+    this._once.forEach((d) => {
+      if (d.evt == evt) return d.cb(data);
     });
   }
 
