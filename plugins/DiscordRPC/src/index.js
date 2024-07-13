@@ -2,78 +2,145 @@ const unloadables = [];
 
 const formatLongString = (s) => (s.length >= 128 ? s.slice(0, 125) + "..." : s);
 
-const ws = new WebSocket(
-  `ws://127.0.0.1:6463/?v=1&client_id=1130698654987067493`
-);
+class WebSocketTransport {
+  constructor() {
+    super();
 
-let int;
+    this.ws = null;
 
-ws.onopen = () => {
-  unloadables.push(
-    neptune.intercept("playbackControls/TIME_UPDATE", ([current]) => {
-      const { item: currentlyPlaying, type: mediaType } =
-        neptune.currentMediaItem;
+    this.tries = 0;
+  }
 
-      // TODO: add video support
-      if (mediaType != "track") return;
+  async connect() {
+    const port = 6463 + (this.tries % 10);
 
-      const date = new Date();
-      const now = (date.getTime() / 1000) | 0;
-      const remaining = date.setSeconds(
-        date.getSeconds() + (currentlyPlaying.duration - current)
-      );
+    this.tries += 1;
 
-      const paused =
-        neptune.store.getState().playbackControls.playbackState ==
-        "NOT_PLAYING";
+    this.ws = new WebSocket(
+      `ws://127.0.0.1:${port}/?v=1&client_id=1130698654987067493`
+    );
 
-      ws.send(
-        JSON.stringify({
-          cmd: "SET_ACTIVITY",
-          args: {
-            pid: 2094112,
-            activity: {
-              timestamps: {
-                ...(paused
-                  ? {}
-                  : {
-                      start: now,
-                      end: remaining,
-                    }),
-              },
-              type: 2,
-              name: formatLongString(currentlyPlaying.title),
-              details: formatLongString(
-                "by " + currentlyPlaying.artists.map((a) => a.name).join(", ")
-              ),
-              assets: {
-                large_image: `https://resources.tidal.com/images/${currentlyPlaying.album.cover
-                  .split("-")
-                  .join("/")}/80x80.jpg`,
-                large_text: `on ${formatLongString(
-                  currentlyPlaying.album.title
-                )}`,
-                ...(paused
-                  ? {
-                      small_image: "paused-icon",
-                      small_text: "Paused",
-                    }
-                  : {}),
+    this.ws.onopen = this.onOpen.bind(this);
+
+    this.ws.onclose = this.onClose.bind(this);
+
+    this.ws.onerror = this.onError.bind(this);
+
+    this._once = [];
+  }
+
+  emit(evt, data) {
+    this._once.forEach((data) => {
+      if (data.evt == evt) return data.cb(data);
+    });
+  }
+
+  once(evt, cb) {
+    this._once.push({ evt, cb });
+  }
+
+  onOpen() {
+    unloadables.push(
+      neptune.intercept("playbackControls/TIME_UPDATE", ([current]) => {
+        const { item: currentlyPlaying, type: mediaType } =
+          neptune.currentMediaItem;
+
+        // TODO: add video support
+        if (mediaType != "track") return;
+
+        const date = new Date();
+        const now = (date.getTime() / 1000) | 0;
+        const remaining = date.setSeconds(
+          date.getSeconds() + (currentlyPlaying.duration - current)
+        );
+
+        const paused =
+          neptune.store.getState().playbackControls.playbackState ==
+          "NOT_PLAYING";
+
+        ws.send(
+          JSON.stringify({
+            cmd: "SET_ACTIVITY",
+            args: {
+              pid: 2094112,
+              activity: {
+                timestamps: {
+                  ...(paused
+                    ? {}
+                    : {
+                        start: now,
+                        end: remaining,
+                      }),
+                },
+                type: 2,
+                name: formatLongString(currentlyPlaying.title),
+                details: formatLongString(
+                  "by " + currentlyPlaying.artists.map((a) => a.name).join(", ")
+                ),
+                assets: {
+                  large_image: `https://resources.tidal.com/images/${currentlyPlaying.album.cover
+                    .split("-")
+                    .join("/")}/80x80.jpg`,
+                  large_text: `on ${formatLongString(
+                    currentlyPlaying.album.title
+                  )}`,
+                  ...(paused
+                    ? {
+                        small_image: "paused-icon",
+                        small_text: "Paused",
+                      }
+                    : {}),
+                },
               },
             },
-          },
-        })
-      );
-    })
-  );
-};
+          })
+        );
+      })
+    );
+  }
 
-ws.onclose = () => {await neptune.plugins.reloadPlugin(neptune.plugins.getPluginById("https://wont-stream.github.io/neptune-plugins/DiscordRPC"))}
+  onClose(event) {
+    if (!event.wasClean) {
+      return;
+    }
+
+    this.emit("close", event);
+  }
+
+  onError() {
+    unloadables.forEach((u) => u());
+    try {
+      this.ws.close();
+    } catch {} // eslint-disable-line no-empty
+
+    setTimeout(() => {
+      this.connect();
+    }, 1000);
+  }
+
+  send(data) {
+    this.ws.send(JSON.stringify(data));
+  }
+
+  close() {
+    return new Promise((r) => {
+      this.once("close", r);
+
+      this.ws.close();
+    });
+  }
+}
+
+const ws = new WebSocketTransport();
+
+ws.connect();
 
 export async function onUnload() {
   unloadables.forEach((u) => u());
 
-  try {
-    ws.close();
-  } catch {}
+  if (ws) {
+    try {
+      ws.close();
+    } catch {}
+  }
 }
