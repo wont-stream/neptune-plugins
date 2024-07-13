@@ -113,7 +113,7 @@ class WebSocketTransport {
 
     setTimeout(() => {
       this.connect();
-    }, 1000);
+    }, 250);
   }
 
   send(data) {
