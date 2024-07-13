@@ -4,6 +4,34 @@ const formatLongString = (s) => (s.length >= 128 ? s.slice(0, 125) + "..." : s);
 
 let programaticPause = false;
 
+function getTrackVibrantColor() {
+  const sheets = document.styleSheets;
+
+  for (let i = 0; i < sheets.length; i++) {
+    try {
+      const rules = sheets[i].cssRules || sheets[i].rules;
+
+      for (let j = 0; j < rules.length; j++) {
+        const rule = rules[j];
+
+        if (rule.selectorText === ":root") {
+          const styles = rule.style;
+          const trackVibrantColor = styles.getPropertyValue(
+            "--track-vibrant-color"
+          );
+          if (trackVibrantColor) {
+            return trackVibrantColor.trim();
+          }
+        }
+      }
+    } catch (e) {
+      console.log(`Access to stylesheet ${sheets[i].href} is restricted.`);
+    }
+  }
+
+  return null;
+}
+
 class WebSocketTransport {
   constructor() {
     this.ws = null;
@@ -85,6 +113,7 @@ class WebSocketTransport {
                   large_text: `on ${formatLongString(
                     currentlyPlaying.album.title
                   )}`,
+                  small_text: getTrackVibrantColor(),
                   ...(paused
                     ? {
                         small_image: "paused-icon",
