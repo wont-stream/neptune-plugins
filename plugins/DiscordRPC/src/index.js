@@ -56,43 +56,45 @@ class WebSocketTransport {
           neptune.store.getState().playbackControls.playbackState ==
           "NOT_PLAYING";
 
-        ws.send(
-          JSON.stringify({
-            cmd: "SET_ACTIVITY",
-            args: {
-              pid: 2094112,
-              activity: {
-                timestamps: {
-                  ...(paused
-                    ? {}
-                    : {
-                        start: now,
-                        end: remaining,
-                      }),
-                },
-                type: 2,
-                name: formatLongString(currentlyPlaying.title),
-                details: formatLongString(
-                  "by " + currentlyPlaying.artists.map((a) => a.name).join(", ")
-                ),
-                assets: {
-                  large_image: `https://resources.tidal.com/images/${currentlyPlaying.album.cover
-                    .split("-")
-                    .join("/")}/80x80.jpg`,
-                  large_text: `on ${formatLongString(
-                    currentlyPlaying.album.title
-                  )}`,
-                  ...(paused
-                    ? {
-                        small_image: "paused-icon",
-                        small_text: "Paused",
-                      }
-                    : {}),
+        this.ws.readyState == 1 &&
+          ws.send(
+            JSON.stringify({
+              cmd: "SET_ACTIVITY",
+              args: {
+                pid: 2094112,
+                activity: {
+                  timestamps: {
+                    ...(paused
+                      ? {}
+                      : {
+                          start: now,
+                          end: remaining,
+                        }),
+                  },
+                  type: 2,
+                  name: formatLongString(currentlyPlaying.title),
+                  details: formatLongString(
+                    "by " +
+                      currentlyPlaying.artists.map((a) => a.name).join(", ")
+                  ),
+                  assets: {
+                    large_image: `https://resources.tidal.com/images/${currentlyPlaying.album.cover
+                      .split("-")
+                      .join("/")}/80x80.jpg`,
+                    large_text: `on ${formatLongString(
+                      currentlyPlaying.album.title
+                    )}`,
+                    ...(paused
+                      ? {
+                          small_image: "paused-icon",
+                          small_text: "Paused",
+                        }
+                      : {}),
+                  },
                 },
               },
-            },
-          })
-        );
+            })
+          );
       })
     );
   }
