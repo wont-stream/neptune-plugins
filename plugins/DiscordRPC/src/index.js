@@ -4,8 +4,6 @@ const formatLongString = (s) => (s.length >= 128 ? s.slice(0, 125) + "..." : s);
 
 class WebSocketTransport {
   constructor() {
-    super();
-
     this.ws = null;
 
     this.tries = 0;
