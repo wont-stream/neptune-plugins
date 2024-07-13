@@ -117,7 +117,6 @@ class WebSocketTransport {
                   ...(paused
                     ? {
                         small_image: "paused-icon",
-                        small_text: "Paused",
                       }
                     : {}),
                 },
