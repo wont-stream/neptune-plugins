@@ -57,9 +57,3 @@
 .betaBadge {
   display: none;
 }
-
-* {
-  font-family: "Cabin", sans-serif !important;
-  font-optical-sizing: auto !important;
-  font-variation-settings: "wdth" 100;
-}
