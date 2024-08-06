@@ -48,10 +48,10 @@
   background: #030303;
 }
 
-[style="color: rgb(255, 212, 50);"],
-[style="color: rgb(51, 255, 238);"],
-[style="color: rgb(249, 186, 122);"] {
-  color: var(--track-vibrant-color);
+[style*="rgb(255, 212, 50)"],
+[style*="rgb(51, 255, 238)"],
+[style*="rgb(249, 186, 122)"] {
+  color: var(--track-vibrant-color) !important;
 }
 
 .betaBadge {
