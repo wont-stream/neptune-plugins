@@ -16,7 +16,6 @@ Using [arRPC](https://arrpc.openasar.dev/) allows the plugin to bypass limits Di
 
 ![image](https://github.com/wont-stream/neptune-plugins/assets/143244075/c90138f5-c89f-450e-9e9d-d6c636a5bfac)
 ![image](https://github.com/wont-stream/neptune-plugins/assets/143244075/d3f829a0-d63f-4dfe-9b75-5ad3a5a74746)
-<small>it will NOT have the progress bar unless you use a discord plugin to do so.<small/>
 
 ## Staging
 
