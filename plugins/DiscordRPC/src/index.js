@@ -40,7 +40,7 @@ class WebSocketTransport {
     const port = 6463 + (this.tries % 10);
     this.tries += 1;
     this.ws = new WebSocket(
-      `wss://localhost:${port}/?v=1&client_id=1288341778637918208`
+      `ws://localhost:${port}/?v=1&client_id=1288341778637918208`
     );
 
     this.ws.onopen = this.onOpen.bind(this);
