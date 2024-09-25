@@ -1,6 +1,6 @@
 const unloadables = [];
 
-const formatLongString = (s) => (s.length >= 128 ? s.slice(0, 125) + "..." : s);
+const formatLongString = (s) => (s.length >= 128 ? `${s.slice(0, 125)}...` : s);
 
 let programaticPause = false;
 
@@ -9,7 +9,7 @@ function getTrackVibrantColor() {
 
   for (let i = 0; i < sheets.length; i++) {
     try {
-      const rules = sheets[i].cssRules || sheets[i].rules;
+      const rules = sheets[i].cssRules;
 
       for (let j = 0; j < rules.length; j++) {
         const rule = rules[j];
@@ -24,9 +24,7 @@ function getTrackVibrantColor() {
           }
         }
       }
-    } catch (e) {
-      console.log(`Access to stylesheet ${sheets[i].href} is restricted.`);
-    }
+    } catch (e) { }
   }
 
   return null;
@@ -35,17 +33,14 @@ function getTrackVibrantColor() {
 class WebSocketTransport {
   constructor() {
     this.ws = null;
-
     this.tries = 0;
   }
 
   async connect() {
     const port = 6463 + (this.tries % 10);
-
     this.tries += 1;
-
     this.ws = new WebSocket(
-      `ws://127.0.0.1:${port}/?v=1&client_id=1130698654987067493`
+      `wss://localhost:${port}/?v=1&client_id=1288341778637918208`
     );
 
     this.ws.onopen = this.onOpen.bind(this);
@@ -53,18 +48,6 @@ class WebSocketTransport {
     this.ws.onclose = this.onClose.bind(this);
 
     this.ws.onerror = this.onError.bind(this);
-
-    this._once = [];
-  }
-
-  emit(evt, data) {
-    this._once.forEach((d) => {
-      if (d.evt == evt) return d.cb(data);
-    });
-  }
-
-  once(evt, cb) {
-    this._once.push({ evt, cb });
   }
 
   onOpen() {
@@ -75,19 +58,19 @@ class WebSocketTransport {
           neptune.currentMediaItem;
 
         // TODO: add video support
-        if (mediaType != "track") return;
+        if (mediaType !== "track") return;
 
         const date = new Date();
-        const now = (date.getTime() / 1000) | 0;
+        const now = (date.getTime() / 1000);
         const remaining = date.setSeconds(
           date.getSeconds() + (currentlyPlaying.duration - current)
         );
 
         const paused =
-          neptune.store.getState().playbackControls.playbackState ==
+          neptune.store.getState().playbackControls.playbackState ===
           "NOT_PLAYING";
 
-        this.ws.readyState == 1 &&
+        this.ws.readyState === 1 &&
           this.send({
             cmd: "SET_ACTIVITY",
             args: {
@@ -97,14 +80,14 @@ class WebSocketTransport {
                   ...(paused
                     ? {}
                     : {
-                        start: now,
-                        end: remaining,
-                      }),
+                      start: now,
+                      end: remaining,
+                    }),
                 },
                 type: 2,
                 name: formatLongString(currentlyPlaying.title),
                 details: formatLongString(
-                  "by " + currentlyPlaying.artists.map((a) => a.name).join(", ")
+                  `by ${currentlyPlaying.artists.map((a) => a.name).join(", ")}`
                 ),
                 assets: {
                   large_image: `https://resources.tidal.com/images/${currentlyPlaying.album.cover
@@ -113,23 +96,23 @@ class WebSocketTransport {
                   large_text: `on ${formatLongString(
                     currentlyPlaying.album.title
                   )}`,
-                  small_text: getTrackVibrantColor(),
+                  small_text:
+                    `${getTrackVibrantColor()}|${neptune.currentMediaItem.item.id}`,
                   ...(paused
                     ? {
-                        small_image: "paused-icon",
-                      }
+                      small_image: "paused-pause",
+                    }
                     : {}),
                 },
+                buttons: [{ label: "Play Song", url: `https://listen.tidal.com/track/${neptune.currentMediaItem.item.id}?u` }],
               },
             },
           });
       })
     );
 
-    // get the RPC working.
     programaticPause = true;
     neptune.actions.playbackControls.pause();
-    neptune.actions.playbackControls.play();
     programaticPause = false;
   }
 
@@ -137,15 +120,15 @@ class WebSocketTransport {
     if (!event.wasClean) {
       return;
     }
-
-    this.emit("close", event);
   }
 
   onError() {
-    unloadables.forEach((u) => u());
+    for (const u of unloadables) {
+      u();
+    }
     try {
       this.ws.close();
-    } catch {} // eslint-disable-line no-empty
+    } catch { } // eslint-disable-line no-empty
 
     setTimeout(() => {
       this.connect();
@@ -157,11 +140,7 @@ class WebSocketTransport {
   }
 
   close() {
-    return new Promise((r) => {
-      this.once("close", r);
-
-      this.ws.close();
-    });
+    this.ws.close();
   }
 }
 
@@ -170,11 +149,13 @@ const ws = new WebSocketTransport();
 ws.connect();
 
 export async function onUnload() {
-  unloadables.forEach((u) => u());
+  for (const u of unloadables) {
+    u();
+  }
 
   if (ws) {
     try {
       ws.close();
-    } catch {}
+    } catch { }
   }
 }
