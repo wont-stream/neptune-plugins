@@ -1,165 +1,123 @@
-const unloadables = [];
+import { intercept } from "@neptune";
+import { Tracer } from "./_lib/trace";
+import getPlaybackControl from "./_lib/getPlaybackControl";
+import { MediaItemCache } from "./_lib/Caches/MediaItemCache";
+import "./discord.native";
 
-const formatLongString = (s) => (s.length >= 128 ? `${s.slice(0, 125)}...` : s);
+const trace = Tracer("[DiscordRPC]");
+const STR_MAX_LEN = 127;
+const formatString = (s) => {
+	if (!s) return;
+	let formattedString = s;
+	if (formattedString.length < 2) formattedString += " ";
+	return formattedString.length >= STR_MAX_LEN
+		? `${formattedString.slice(0, STR_MAX_LEN - 3)}...`
+		: formattedString;
+};
+const getMediaURL = (id, path = "/1280x1280.jpg") =>
+	id && `https://resources.tidal.com/images/${id.split("-").join("/")}${path}`;
 
-let programaticPause = false;
+let track;
+let paused = true;
+let time = 0;
 
-function getTrackVibrantColor() {
-	const sheets = document.styleSheets;
+export function update(data) {
+	track = data?.track ?? track;
+	paused = data?.paused ?? paused;
+	time = data?.time ?? time;
 
-	for (let i = 0; i < sheets.length; i++) {
-		try {
-			const rules = sheets[i].cssRules;
+	// Clear activity if no track or paused
+	if (!track || paused) return setRPC();
 
-			for (let j = 0; j < rules.length; j++) {
-				const rule = rules[j];
+	const activity = {};
 
-				if (rule.selectorText === ":root") {
-					const styles = rule.style;
-					const trackVibrantColor = styles.getPropertyValue(
-						"--track-vibrant-color",
-					);
-					if (trackVibrantColor) {
-						return trackVibrantColor.trim();
-					}
-				}
-			}
-		} catch (e) {}
+	// Listening type
+	activity.type = 2;
+
+	// Only works with modded RPC servers (arRPC, bunRPC, etc)
+	activity.name = formatString(track.title);
+
+	activity.buttons = [
+		{
+			url: `https://tidal.com/browse/${track.contentType}/${track.id}?u`,
+			label: "Play Song",
+		},
+	];
+
+	// Playback/Time
+	if (track.duration !== undefined) {
+		activity.startTimestamp = Date.now() - time * 1000;
+		activity.endTimestamp = activity.startTimestamp + track.duration * 1000;
 	}
 
-	return null;
+	// Album
+	if (track.album) {
+		activity.largeImageKey = getMediaURL(track.album.cover);
+		activity.largeImageText = formatString(track.album.title);
+	}
+
+	// Title/Artist
+	activity.details = formatString(track.title);
+	activity.state =
+		formatString(track.artists?.map((a) => a.name).join(", ")) ??
+		"Unknown Artist";
+
+	return setRPC(activity);
 }
 
-class WebSocketTransport {
-	constructor() {
-		this.ws = null;
-		this.tries = 0;
-	}
-
-	async connect() {
-		const port = 6463 + (this.tries % 10);
-		this.tries += 1;
-		this.ws = new WebSocket(
-			`ws://localhost:${port}/?v=1&client_id=1288341778637918208`,
-		);
-
-		this.ws.onopen = this.onOpen.bind(this);
-
-		this.ws.onclose = this.onClose.bind(this);
-
-		this.ws.onerror = this.onError.bind(this);
-	}
-
-	onOpen() {
-		unloadables.push(
-			neptune.intercept("playbackControls/TIME_UPDATE", ([current]) => {
-				if (programaticPause) return;
-				const { item: currentlyPlaying, type: mediaType } =
-					neptune.currentMediaItem;
-
-				// TODO: add video support
-				if (mediaType !== "track") return;
-
-				const date = new Date();
-				const now = date.getTime() / 1000;
-				const remaining = date.setSeconds(
-					date.getSeconds() + (currentlyPlaying.duration - current),
-				);
-
-				const paused =
-					neptune.store.getState().playbackControls.playbackState ===
-					"NOT_PLAYING";
-
-				this.ws.readyState === 1 &&
-					this.send({
-						cmd: "SET_ACTIVITY",
-						args: {
-							pid: 2094112,
-							activity: {
-								timestamps: {
-									...(paused
-										? {}
-										: {
-												start: now,
-												end: remaining,
-											}),
-								},
-								type: 2,
-								name: formatLongString(currentlyPlaying.title),
-								details: formatLongString(
-									`by ${currentlyPlaying.artists.map((a) => a.name).join(", ")}`,
-								),
-								assets: {
-									large_image: `https://resources.tidal.com/images/${currentlyPlaying.album.cover
-										.split("-")
-										.join("/")}/80x80.jpg`,
-									large_text: `on ${formatLongString(
-										currentlyPlaying.album.title,
-									)}`,
-									small_text: `${getTrackVibrantColor()}|${neptune.currentMediaItem.item.id}`,
-									...(paused
-										? {
-												small_image: "paused-pause",
-											}
-										: {}),
-								},
-								buttons: [
-									{
-										label: "Play Song",
-										url: `https://listen.tidal.com/track/${neptune.currentMediaItem.item.id}?u`,
-									},
-								],
-							},
-						},
-					});
-			}),
-		);
-
-		programaticPause = true;
-		neptune.actions.playbackControls.pause();
-		programaticPause = false;
-	}
-
-	onClose(event) {
-		if (!event.wasClean) {
-			return;
-		}
-	}
-
-	onError() {
-		for (const u of unloadables) {
-			u();
-		}
-		try {
-			this.ws.close();
-		} catch {} // eslint-disable-line no-empty
-
-		setTimeout(() => {
-			this.connect();
-		}, 250);
-	}
-
-	send(data) {
-		this.ws.send(JSON.stringify(data));
-	}
-
-	close() {
-		this.ws.close();
-	}
+function setRPC(activity) {
+	return window.electron.ipcRenderer
+		.invoke("DISCORD_SET_ACTIVITY", activity)
+		.catch(trace.err.withContext("Failed to set activity"));
 }
 
-const ws = new WebSocketTransport();
+const unloadTransition = intercept(
+	"playbackControls/MEDIA_PRODUCT_TRANSITION",
+	([media]) => {
+		const mediaProduct = media.mediaProduct;
+		MediaItemCache.ensure(mediaProduct.productId)
+			.then((track) => {
+				if (track) update({ track, time: 0 });
+			})
+			.catch(trace.err.withContext("Failed to fetch media item"));
+	},
+);
 
-ws.connect();
+const unloadTime = intercept("playbackControls/TIME_UPDATE", ([newTime]) => {
+	time = newTime;
+});
 
-export async function onUnload() {
-	for (const u of unloadables) {
-		u();
-	}
+const unloadSeek = intercept("playbackControls/SEEK", ([newTime]) => {
+	if (typeof newTime === "number") update({ time: newTime });
+});
 
-	if (ws) {
-		try {
-			ws.close();
-		} catch {}
-	}
-}
+const unloadPlay = intercept(
+	"playbackControls/SET_PLAYBACK_STATE",
+	([state]) => {
+		if (paused && state === "PLAYING") update({ paused: false });
+	},
+);
+
+const unloadPause = intercept("playbackControls/PAUSE", () => {
+	update({ paused: true });
+});
+
+const { playbackContext, playbackState, latestCurrentTime } =
+	getPlaybackControl();
+
+update({
+	track: await MediaItemCache.ensure(playbackContext?.actualProductId),
+	time: latestCurrentTime,
+	paused: playbackState !== "PLAYING",
+});
+
+export const onUnload = () => {
+	unloadTransition();
+	unloadTime();
+	unloadSeek();
+	unloadPlay();
+	unloadPause();
+	window.electron.ipcRenderer
+		.invoke("DISCORD_CLEANUP")
+		.catch(trace.msg.err.withContext("Failed to cleanup RPC"));
+};

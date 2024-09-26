@@ -28,6 +28,7 @@ for (const plugin of plugins) {
         ...repl._builtinLibs.map((m) => `node:${m}`),
         "@neptune",
         "@plugin",
+        "electron"
       ],
       platform: "browser",
       outfile,

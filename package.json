@@ -7,5 +7,9 @@
 	},
 	"devDependencies": {
 		"esbuild": "^0.18.20"
+	},
+	"dependencies": {
+		"@xhayper/discord-rpc": "^1.2.0",
+		"electron": "^32.1.2"
 	}
 }
