@@ -1,15 +1,15 @@
 const esbuild = require("esbuild");
-const fs = require("fs");
-const path = require("path");
-const crypto = require("crypto");
-const repl = require("repl");
+const fs = require("node:fs");
+const path = require("node:path");
+const crypto = require("node:crypto");
+const repl = require("node:repl");
 
 const plugins = fs.readdirSync("./plugins");
 for (const plugin of plugins) {
-  let pluginPath = path.join("./plugins/", plugin);
+  const pluginPath = path.join("./plugins/", plugin);
 
   const pluginManifest = JSON.parse(
-    fs.readFileSync(path.join(pluginPath, "plugin.json"))
+    fs.readFileSync(path.join(pluginPath, "plugin.json")),
   );
 
   const outfile = path.join(pluginPath, "dist/index.js");
@@ -17,7 +17,7 @@ for (const plugin of plugins) {
   esbuild
     .build({
       entryPoints: [
-        "./" + path.join(pluginPath, pluginManifest.main ?? "index.js"),
+        `./${path.join(pluginPath, pluginManifest.main ?? "index.js")}`,
       ],
       bundle: true,
       minify: true,
@@ -25,7 +25,7 @@ for (const plugin of plugins) {
       // Make every node builtin external while still bundling for browsers.
       external: [
         ...repl._builtinLibs,
-        ...repl._builtinLibs.map((m) => "node:" + m),
+        ...repl._builtinLibs.map((m) => `node:${m}`),
         "@neptune",
         "@plugin",
       ],
@@ -44,10 +44,10 @@ for (const plugin of plugins) {
               description: pluginManifest.description,
               author: pluginManifest.author,
               hash: this.read(),
-            })
+            }),
           );
 
-          console.log("Built " + pluginManifest.name + "!");
+          console.log(`Built ${pluginManifest.name}!`);
         });
     });
 }

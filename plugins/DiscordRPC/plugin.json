@@ -1,6 +1,6 @@
 {
-  "name": "Discord RPC",
-  "description": "An opinionated arRPC only Discord RPC. (forked from toonlink's plugin)",
-  "author": "wont-stream",
-  "main": "./src/index.js"
+	"name": "Discord RPC",
+	"description": "An opinionated arRPC only Discord RPC. (forked from toonlink's plugin)",
+	"author": "wont-stream",
+	"main": "./src/index.js"
 }
