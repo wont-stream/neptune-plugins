@@ -65,6 +65,9 @@ export function update(data) {
 		formatString(track.artists?.map((a) => a.name).join(", ")) ??
 		"Unknown Artist";
 
+	// Metadata
+	activity.smallImageText = `${getComputedStyle(document.body).getPropertyValue("--track-vibrant-color")}|${track.id}`
+
 	return setRPC(activity);
 }
 
