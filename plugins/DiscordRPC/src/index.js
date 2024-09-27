@@ -21,6 +21,9 @@ let track;
 let paused = true;
 let time = 0;
 
+const mediaItemCache = new MediaItemCache();
+
+
 export function update(data) {
 	track = data?.track ?? track;
 	paused = data?.paused ?? paused;
@@ -75,7 +78,7 @@ const unloadTransition = intercept(
 	"playbackControls/MEDIA_PRODUCT_TRANSITION",
 	([media]) => {
 		const mediaProduct = media.mediaProduct;
-		MediaItemCache.ensure(mediaProduct.productId)
+		mediaItemCache.ensure(mediaProduct.productId)
 			.then((track) => {
 				if (track) update({ track, time: 0 });
 			})
@@ -106,7 +109,7 @@ const { playbackContext, playbackState, latestCurrentTime } =
 	getPlaybackControl();
 
 update({
-	track: await MediaItemCache.ensure(playbackContext?.actualProductId),
+	track: await mediaItemCache.ensure(playbackContext?.actualProductId),
 	time: latestCurrentTime,
 	paused: playbackState !== "PLAYING",
 });
