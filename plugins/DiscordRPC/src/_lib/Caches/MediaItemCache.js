@@ -5,6 +5,9 @@ import getPlaybackControl from "../getPlaybackControl";
 import { libTrace } from "../trace";
 
 export class MediaItemCache {
+	constructor() {
+		this._cache = {};
+	}
 	current(playbackContext) {
 		const context = playbackContext ?? getPlaybackControl()?.playbackContext;
 		if (context?.actualProductId === undefined) return undefined;
