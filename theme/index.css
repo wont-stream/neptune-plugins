@@ -7,8 +7,6 @@
 	--user-profile-linear-gradient: linear-gradient(160deg,
 			var(--track-vibrant-color) 1.22%,
 			#0c0c0c 79.07%) !important;
-
-	--wave-color-solid-accent-fill: var(--user-profile-linear-gradient)
 }
 
 #sidebar {
