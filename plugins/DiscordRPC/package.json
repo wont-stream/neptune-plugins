@@ -1,7 +1,7 @@
 {
-	"displayName": "Discord RPC",
+	"displayName": "Discord RPC [FORK]",
 	"description": "Shows what song you're currently listening to on Discord.",
-	"author": "Inrixia",
+	"author": "wont-stream",
 	"main": "./src/index.js",
 	"dependencies": {
 		"@inrixia/lib": "workspace:*",
