@@ -2,9 +2,9 @@
 	"name": "@seth/luna-plugins",
 	"description": "Plugins for Tidal Luna",
 	"author": {
-		"name": "Inrixia",
-		"url": "https://github.com/Inrixia",
-		"avatarUrl": "https://2.gravatar.com/avatar/eeaffef9eb9b436dccc58c6c44c9fe8c3528e83e3bf64e1c736a68dbe8c097d3"
+		"name": "Seth",
+		"url": "https://github.com/wont-stream",
+		"avatarUrl": "https://github.com/wont-stream.png"
 	},
 	"homepage": "https://github.com/Inrixia/luna-plugins",
 	"repository": {

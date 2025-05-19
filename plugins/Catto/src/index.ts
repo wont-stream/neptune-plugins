@@ -1,22 +1,21 @@
 import type { LunaUnload } from "@luna/core";
 import { redux, MediaItem, PlayState } from "@luna/lib";
 
-
 let element: HTMLVideoElement = document.createElement("video");
-
-element.src = "https://github.com/BlafKing/spicetify-cat-jam-synced/raw/main/src/resources/catjam.webm"
-element.style.visibility = "hidden";
+element.src = webm;
 element.style.margin = "0 0 0 8px";
-element.style.height = "100%";
+element.style.height = "64px";
+element.style.position = "relative";
+element.style.top = "-63px";
+element.style.left = "-8px";
+element.style.borderRadius = "var(--wave-border-radius--extra-small)";
 element.loop = true;
 element.muted = true;
-element.autoplay = true;
 
-const player = document.getElementById("footerPlayer")
+const player = document.querySelector("[data-test=\"current-media-imagery\"]");
 
 if (player) {
-	player.style.gridAutoColumns = "auto";
-	player.prepend(element);
+	player.append(element);
 }
 
 export const unloads = new Set<LunaUnload>();
@@ -27,7 +26,6 @@ redux.intercept(["playbackControls/MEDIA_PRODUCT_TRANSITION", "playbackControls/
 	const mediaItem = await MediaItem.fromPlaybackContext();
 
 	if (!mediaItem) {
-		element.style.visibility = "hidden";
 		return;
 	}
 
@@ -35,16 +33,13 @@ redux.intercept(["playbackControls/MEDIA_PRODUCT_TRANSITION", "playbackControls/
 
 	if (PlayState.playing) {
 		element.play();
-
-		if (!bpm) {
-			element.style.visibility = "hidden";
-		} else {
-			element.style.visibility = "visible";
-
-			element.currentTime = 0;
-			element.playbackRate = bpm / 135.48;
-		}
 	} else {
 		element.pause();
+		element.currentTime = 0;
+	}
+
+	if (bpm) {
+		element.currentTime = 0;
+		element.playbackRate = bpm / 135.48;
 	}
 });
