@@ -35,16 +35,16 @@ redux.intercept(["playbackControls/MEDIA_PRODUCT_TRANSITION", "playbackControls/
 
 	if (PlayState.playing) {
 		element.play();
+
+		if (!bpm) {
+			element.style.visibility = "hidden";
+		} else {
+			element.style.visibility = "visible";
+
+			element.currentTime = 0;
+			element.playbackRate = bpm / 135.48;
+		}
 	} else {
 		element.pause();
-	}
-
-	if (!bpm) {
-		element.style.visibility = "hidden";
-	} else {
-		element.style.visibility = "visible";
-
-		element.currentTime = 0;
-		element.playbackRate = bpm / 135.48;
 	}
 });
