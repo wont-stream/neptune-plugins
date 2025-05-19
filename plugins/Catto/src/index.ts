@@ -6,6 +6,7 @@ let element: HTMLVideoElement = document.createElement("video");
 
 element.src = "https://github.com/BlafKing/spicetify-cat-jam-synced/raw/main/src/resources/catjam.webm"
 element.style.visibility = "hidden";
+element.style.margin = "0 0 0 8px";
 element.style.height = "100%";
 element.loop = true;
 element.muted = true;
