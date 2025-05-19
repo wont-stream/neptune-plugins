@@ -1,7 +1,7 @@
 {
-	"name": "VolumeScroll",
+	"name": "Catto",
 	"description": "Lets you scroll on the volume icon to change the volume by 10%. Can configure the step size, including different amounts for when you hold <b>SHIFT</b>",
-	"homepage": "https://github.com/Inrixia/luna-plugins#VolumeScroll",
+	"homepage": "https://github.com/Inrixia/luna-plugins#Catto",
 	"author": {
 		"name": "Nick Oates",
 		"url": "https://github.com/n1ckoates",

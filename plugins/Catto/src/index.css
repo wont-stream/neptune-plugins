@@ -1,0 +1,7 @@
+.player {
+    grid-auto-columns: auto;
+}
+
+video {
+    height: 96px;
+}
