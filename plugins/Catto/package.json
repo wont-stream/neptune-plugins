@@ -1,11 +1,11 @@
 {
-	"name": "Catto",
-	"description": "Lets you scroll on the volume icon to change the volume by 10%. Can configure the step size, including different amounts for when you hold <b>SHIFT</b>",
-	"homepage": "https://github.com/Inrixia/luna-plugins#Catto",
+	"name": "@seth/CatJam",
+	"description": "A dancing cat.",
 	"author": {
-		"name": "Nick Oates",
-		"url": "https://github.com/n1ckoates",
-		"avatarUrl": "https://1.gravatar.com/avatar/665fef45b1c988d52f011b049b99417485b9b558947169bc4b726b8eb69a2226"
+		"name": "Seth",
+		"url": "https://github.com/wont-stream",
+		"avatarUrl": "https://github.com/wont-stream.png"
 	},
-	"exports": "./src/index.ts"
+	"main": "./src/index.ts",
+	"type": "module"
 }
