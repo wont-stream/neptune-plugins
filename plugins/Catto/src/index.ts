@@ -2,7 +2,7 @@ import type { LunaUnload } from "@luna/core";
 import { redux, MediaItem, PlayState } from "@luna/lib";
 
 let element: HTMLVideoElement = document.createElement("video");
-element.src = webm;
+element.src = "https://cdn.jsdelivr.net/gh/wont-stream/neptune-plugins@dev/plugins/Catto/src/catjam.webm";
 element.style.margin = "0 0 0 8px";
 element.style.height = "64px";
 element.style.position = "relative";
