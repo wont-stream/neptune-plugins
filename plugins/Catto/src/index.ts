@@ -47,6 +47,9 @@ redux.intercept(["playbackControls/MEDIA_PRODUCT_TRANSITION", "playbackControls/
 		if (bpm) {
 			//element.currentTime = 0;
 			element.playbackRate = bpm / 135.48;
+		} else {
+			element.pause();
+			element.currentTime = 0;
 		}
 	} else {
 		element.pause();
