@@ -34,9 +34,6 @@ redux.intercept(["playbackControls/MEDIA_PRODUCT_TRANSITION", "playbackControls/
 
 	element.currentTime = ((mediaItem.duration || 0) - PlayState.playTime) % element.duration;
 
-
-	console.log("mediaItem", PlayState.playTime);
-
 	const bpm = await mediaItem?.bpm()
 
 	if (PlayState.playing) {
