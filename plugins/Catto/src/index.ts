@@ -36,6 +36,10 @@ redux.intercept(["playbackControls/MEDIA_PRODUCT_TRANSITION", "playbackControls/
 
 	const bpm = await mediaItem?.bpm()
 
+	if (!bpm) {
+		if (storage.skipNoBPM) PlayState.next();
+	}
+
 	if (PlayState.playing) {
 		element.play();
 
@@ -43,9 +47,9 @@ redux.intercept(["playbackControls/MEDIA_PRODUCT_TRANSITION", "playbackControls/
 			//element.currentTime = 0;
 			element.playbackRate = bpm / 135.48;
 		} else {
+			if (storage.skipNoBPM) PlayState.next();
 			element.pause();
 			element.currentTime = 0;
-			if (storage.skipNoBPM) PlayState.next();
 		}
 	} else {
 		element.pause();
