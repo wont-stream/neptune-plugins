@@ -25,8 +25,6 @@ if (player) {
 export const unloads = new Set<LunaUnload>();
 unloads.add(() => element?.remove());
 
-let currentMediaItem: MediaItem | null = null;
-
 redux.intercept(["playbackControls/MEDIA_PRODUCT_TRANSITION", "playbackControls/SET_PLAYBACK_STATE"], unloads, async ({ mediaProduct }) => {
 	const mediaItem = await MediaItem.fromPlaybackContext();
 
@@ -34,10 +32,10 @@ redux.intercept(["playbackControls/MEDIA_PRODUCT_TRANSITION", "playbackControls/
 		return;
 	}
 
-	if (mediaItem !== currentMediaItem) {
-		currentMediaItem = mediaItem;
-		element.currentTime = (mediaItem.duration || 0) % element.duration;
-	}
+	element.currentTime = ((mediaItem.duration || 0) - PlayState.playTime) % element.duration;
+
+
+	console.log("mediaItem", PlayState.playTime);
 
 	const bpm = await mediaItem?.bpm()
 
