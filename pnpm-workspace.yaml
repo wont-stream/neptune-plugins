@@ -1,2 +1,4 @@
 packages:
- - "plugins/*"
+  - plugins/*
+ignoredBuiltDependencies:
+  - electron
