@@ -45,6 +45,7 @@ redux.intercept(["playbackControls/MEDIA_PRODUCT_TRANSITION", "playbackControls/
 		} else {
 			element.pause();
 			element.currentTime = 0;
+			if (storage.skipNoBPM) PlayState.next();
 		}
 	} else {
 		element.pause();
