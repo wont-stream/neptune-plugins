@@ -1,5 +1,8 @@
 import type { LunaUnload } from "@luna/core";
 import { redux, MediaItem, PlayState } from "@luna/lib";
+import { storage } from "./Settings";
+
+export { Settings } from "./Settings";
 
 let element: HTMLVideoElement = document.createElement("video");
 element.src = "https://cdn.jsdelivr.net/gh/wont-stream/neptune-plugins@dev/plugins/Catto/src/catjam.webm";
@@ -8,6 +11,7 @@ element.style.height = "64px";
 element.style.position = "relative";
 element.style.top = "-63px";
 element.style.left = "-8px";
+element.style.opacity = (storage.opacity / 100).toString();
 element.style.borderRadius = "var(--wave-border-radius--extra-small)";
 element.loop = true;
 element.muted = true;
@@ -21,7 +25,8 @@ if (player) {
 export const unloads = new Set<LunaUnload>();
 unloads.add(() => element?.remove());
 
-// Element doesn't exist until the page is loaded
+let currentMediaItem: MediaItem | null = null;
+
 redux.intercept(["playbackControls/MEDIA_PRODUCT_TRANSITION", "playbackControls/SET_PLAYBACK_STATE"], unloads, async ({ mediaProduct }) => {
 	const mediaItem = await MediaItem.fromPlaybackContext();
 
@@ -29,17 +34,24 @@ redux.intercept(["playbackControls/MEDIA_PRODUCT_TRANSITION", "playbackControls/
 		return;
 	}
 
+	if (mediaItem !== currentMediaItem) {
+		currentMediaItem = mediaItem;
+		element.currentTime = (mediaItem.duration || 0) % element.duration;
+	}
+
 	const bpm = await mediaItem?.bpm()
 
 	if (PlayState.playing) {
 		element.play();
+
+		if (bpm) {
+			//element.currentTime = 0;
+			element.playbackRate = bpm / 135.48;
+		}
 	} else {
 		element.pause();
-		element.currentTime = 0;
-	}
-
-	if (bpm) {
-		element.currentTime = 0;
-		element.playbackRate = bpm / 135.48;
+		//element.currentTime = 0;
 	}
 });
+
+export default element;
