@@ -4,7 +4,7 @@
     left: -8px;
     margin: 0 0 0 8px;
     height: 64px;
-    opacity: var(--CatJam-opacity);
+    opacity: var(--catjam-opacity);
     border-radius: var(--wave-border-radius--extra-small);
 }
 

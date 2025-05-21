@@ -17,7 +17,7 @@ let video: HTMLVideoElement = document.createElement("video");
 	video.src = "https://cdn.jsdelivr.net/gh/wont-stream/neptune-plugins@dev/plugins/Catto/src/catjam.webm";
 
 	video.classList.add("CatJam");
-	video.style = `--CatJam-opacity: ${storage.opacity / 100};`;
+	video.style = `--catjam-opacity: ${storage.opacity / 100};`;
 
 	video.loop = true;
 	video.muted = true;
