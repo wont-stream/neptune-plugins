@@ -20,8 +20,8 @@
 	},
 	"devDependencies": {
 		"@inrixia/helpers": "^3.20.0",
-		"@types/node": "^22.15.19",
-		"@types/react": "^19.1.4",
+		"@types/node": "^22.15.21",
+		"@types/react": "^19.1.5",
 		"@types/react-dom": "^19.1.5",
 		"concurrently": "^9.1.2",
 		"electron": "^36.2.1",
