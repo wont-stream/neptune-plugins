@@ -12,26 +12,26 @@ import css from "file://index.css"
 	new StyleTag("CatJam", unloads, css).add();
 }
 
-let element: HTMLVideoElement = document.createElement("video");
+let video: HTMLVideoElement = document.createElement("video");
 { // Setup catjam element
-	element.src = "https://cdn.jsdelivr.net/gh/wont-stream/neptune-plugins@dev/plugins/Catto/src/catjam.webm";
+	video.src = "https://cdn.jsdelivr.net/gh/wont-stream/neptune-plugins@dev/plugins/Catto/src/catjam.webm";
 
-	element.classList.add("CatJam");
-	element.style = `--catjam-opacity: ${storage.opacity / 100};`;
+	video.classList.add("CatJam");
+	video.style = `--CatJam-opacity: ${storage.opacity / 100};`;
 
-	element.loop = true;
-	element.muted = true;
+	video.loop = true;
+	video.muted = true;
 }
 
 { // Add catjam element to the player
 	const player = document.querySelector("[data-test=\"current-media-imagery\"]");
 
 	if (player) {
-		player.append(element);
+		player.append(video);
 	}
 }
 
-unloads.add(() => element?.remove());
+unloads.add(() => video?.remove());
 
 redux.intercept(["playbackControls/MEDIA_PRODUCT_TRANSITION", "playbackControls/SET_PLAYBACK_STATE"], unloads, async () => {
 	const mediaItem = await MediaItem.fromPlaybackContext();
@@ -40,24 +40,24 @@ redux.intercept(["playbackControls/MEDIA_PRODUCT_TRANSITION", "playbackControls/
 		return;
 	}
 
-	element.currentTime = ((mediaItem.duration || 0) - PlayState.playTime) % element.duration;
+	video.currentTime = ((mediaItem.duration || 0) - PlayState.playTime) % video.duration;
 
 	const bpm = await mediaItem?.bpm()
 
 	if (PlayState.playing) {
-		element.play();
+		video.play();
 
 		if (bpm) {
-			//element.currentTime = 0;
-			element.playbackRate = bpm / 135.48;
+			//video.currentTime = 0;
+			video.playbackRate = bpm / 135.48;
 		} else {
-			element.pause();
-			element.currentTime = 0;
+			video.pause();
+			video.currentTime = 0;
 		}
 	} else {
-		element.pause();
-		//element.currentTime = 0;
+		video.pause();
+		//video.currentTime = 0;
 	}
 });
 
-export default element;
+export default video;
