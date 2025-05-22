@@ -66,8 +66,8 @@ const updateCatJam = async ({ type, mediaItem, playbackState }: { type: "mediaTr
 					video.playbackRate = bpm / 135.48;
 				} else {
 					hasBPM = false;
-					video.pause();
-					video.currentTime = 0;
+					//video.pause();
+					//video.currentTime = 0;
 				}
 			}
 			break;
@@ -75,15 +75,16 @@ const updateCatJam = async ({ type, mediaItem, playbackState }: { type: "mediaTr
 		case "playbackState": {
 			switch (playbackState) {
 				case "PLAYING": {
-					if (hasBPM) {
-						setCurrentTime();
-						video.play();
-					} else {
-						video.pause();
-					}
+					//if (hasBPM) {
+					setCurrentTime();
+					video.play();
+					//} else {
+					//	video.pause();
+					//}
 					break;
 				}
 				default: {
+					setCurrentTime();
 					video.pause();
 					break;
 				}
