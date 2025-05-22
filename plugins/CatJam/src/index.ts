@@ -31,7 +31,7 @@ const appendCatJam = () => {
 	const smallAlbumArt = document.querySelector("[data-test=\"current-media-imagery\"]");
 	if (smallAlbumArt) return smallAlbumArt.append(video);
 
-	return setTimeout(appendCatJam, 100)
+	return setTimeout(appendCatJam, 5)
 }
 appendCatJam();
 //#endregion
