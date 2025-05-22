@@ -1,6 +1,6 @@
 import React from "react";
 
-import { LunaSettings, LunaNumberSetting, LunaSwitchSetting } from "@luna/ui";
+import { LunaSettings, LunaNumberSetting } from "@luna/ui";
 
 import { ReactiveStore } from "@luna/core";
 
