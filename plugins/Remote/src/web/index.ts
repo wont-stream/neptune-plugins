@@ -67,7 +67,9 @@ type updateData = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-	const ws = new WebSocket("ws://localhost:20941");
+	const ws = new WebSocket(
+		`${location.protocol.replace("http", "ws")}//${location.host}`,
+	);
 
 	ws.onopen = () => {
 		console.log("WebSocket connection established");
@@ -88,6 +90,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	ws.onclose = () => {
 		console.log("WebSocket connection closed");
+		alert("Connection Lost\nWill retry after prompt closed");
+		location.reload();
 	};
 
 	const albumArt = document.getElementById("album-art") as HTMLImageElement;
