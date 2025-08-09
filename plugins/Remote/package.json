@@ -10,6 +10,7 @@
 		"@types/ws": "^8.18.1",
 		"beercss": "^3.11.33",
 		"material-dynamic-colors": "^1.1.2",
+		"reconnecting-websocket": "^4.4.0",
 		"ws": "^8.18.3"
 	},
 	"description": "A remote control for your media.",

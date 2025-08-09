@@ -1,3 +1,5 @@
+import ReconnectingWebSocket from "reconnecting-websocket";
+
 type updateData = {
 	track: {
 		id: number;
@@ -67,32 +69,6 @@ type updateData = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-	const ws = new WebSocket(
-		`${location.protocol.replace("http", "ws")}//${location.host}`,
-	);
-
-	ws.onopen = () => {
-		console.log("WebSocket connection established");
-		ws.send(JSON.stringify({ op: 2, data: { type: "request" } }));
-	};
-
-	ws.onmessage = (event) => {
-		const { op, data } = JSON.parse(event.data);
-
-		if (op === 0) {
-			return ws.send(JSON.stringify({ op: 0 }));
-		} else if (op === 1) {
-			return update(data);
-		} else if (op === 2) {
-			return;
-		}
-	};
-
-	ws.onclose = () => {
-		console.log("WebSocket connection closed");
-		location.reload();
-	};
-
 	const albumArt = document.getElementById("album-art") as HTMLImageElement;
 	const trackTitle = document.getElementById(
 		"track-title",
@@ -116,6 +92,58 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const playIcon = document.getElementById("play-icon") as HTMLElement;
 	const repeatIcon = document.getElementById("repeat-icon") as HTMLElement;
+
+	const snackBar = document.getElementById("snackbar") as HTMLDivElement;
+	const snackBarIcon = document.getElementById("snackbar-icon") as HTMLElement;
+	const snackBarMessage = document.getElementById(
+		"snackbar-message",
+	) as HTMLElement;
+
+	const showSnackbar = (type: "info" | "error", message: string) => {
+		if (type === "info") {
+			snackBar.classList.remove("error");
+			snackBarIcon.textContent = "info";
+		} else {
+			snackBar.classList.add("error");
+			snackBarIcon.textContent = "error";
+		}
+		snackBarMessage.textContent = message;
+		snackBar.showPopover();
+
+		setTimeout(() => {
+			snackBar.hidePopover();
+		}, 5000);
+	};
+
+	const ws = new ReconnectingWebSocket(
+		`${location.protocol.replace("http", "ws")}//${location.host}`,
+	);
+
+	ws.addEventListener("open", () => {
+		showSnackbar("info", "WebSocket connection established");
+		ws.send(JSON.stringify({ op: 2, data: { type: "request" } }));
+	});
+
+	ws.addEventListener("message", (event) => {
+		const { op, data } = JSON.parse(event.data);
+
+		if (op === 0) {
+			return ws.send(JSON.stringify({ op: 0 }));
+		} else if (op === 1) {
+			update(data);
+			return;
+		} else if (op === 2) {
+			return;
+		}
+	});
+
+	ws.addEventListener("error", () => {
+		showSnackbar("error", "WebSocket error");
+	});
+
+	ws.addEventListener("close", () => {
+		showSnackbar("error", "WebSocket connection closed");
+	});
 
 	let storedData: updateData;
 

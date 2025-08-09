@@ -1,5 +1,6 @@
 import type { LunaUnload } from "@luna/core";
 import { ipcRenderer, MediaItem, PlayState } from "@luna/lib";
+import ReconnectingWebSocket from "reconnecting-websocket";
 
 import { stopWebSocketServer } from "./server.native";
 
@@ -7,13 +8,9 @@ export const unloads = new Set<LunaUnload>();
 
 unloads.add(() => stopWebSocketServer());
 
-const ws = new WebSocket("ws://localhost:20941");
+const ws = new ReconnectingWebSocket("ws://localhost:20941");
 
-ws.onopen = () => {
-	console.log("WebSocket connection established");
-};
-
-ws.onmessage = (event) => {
+ws.addEventListener("message", (event) => {
 	const { op, data } = JSON.parse(event.data);
 
 	if (op === 0) {
@@ -53,11 +50,7 @@ ws.onmessage = (event) => {
 	}
 
 	sendNewDataToClients();
-};
-
-ws.onclose = () => {
-	console.log("WebSocket connection closed");
-};
+});
 
 unloads.add(() => ws.close());
 

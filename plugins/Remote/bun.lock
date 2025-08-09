@@ -7,6 +7,7 @@
         "@types/ws": "^8.18.1",
         "beercss": "^3.11.33",
         "material-dynamic-colors": "^1.1.2",
+        "reconnecting-websocket": "^4.4.0",
         "ws": "^8.18.3",
       },
     },
@@ -21,6 +22,8 @@
     "beercss": ["beercss@3.11.33", "", { "dependencies": { "material-dynamic-colors": "^1.1.2" } }, "sha512-5R7t0IWg4Q1ky4rhzsPKoIiF7xi9Eo0l4mjWh/TkhSnFMp9yM6i3q1CykwcOmRw6o8I0Q+LjZL3YNLD1krvcEA=="],
 
     "material-dynamic-colors": ["material-dynamic-colors@1.1.2", "", { "dependencies": { "@material/material-color-utilities": "^0.2.7" }, "bin": { "material-dynamic-colors": "cli.js" } }, "sha512-8KD0jrPTFs2x06UJWbvkg6E0HyzFjrvS5oOc2DsXzIEOqZTbb3ruLMUhNuPSl8WeHA/O/RTAlTLcxqYXJzYwPA=="],
+
+    "reconnecting-websocket": ["reconnecting-websocket@4.4.0", "", {}, "sha512-D2E33ceRPga0NvTDhJmphEgJ7FUYF0v4lr1ki0csq06OdlxKfugGzN0dSkxM/NfqCxYELK4KcaTOUOjTV6Dcng=="],
 
     "undici-types": ["undici-types@7.10.0", "", {}, "sha512-t5Fy/nfn+14LuOc2KNYg75vZqClpAiqscVvMygNnlsHBFpSXdJaYtXMcdNLpl/Qvc3P2cB3s6lOV51nqsFq4ag=="],
 
