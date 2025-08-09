@@ -1,26 +1,33 @@
-import React from "react";
-
-import { LunaSettings, LunaNumberSetting } from "@luna/ui";
-
 import { ReactiveStore } from "@luna/core";
 
+import { LunaNumberSetting, LunaSettings } from "@luna/ui";
+import React from "react";
+
 export const storage = await ReactiveStore.getPluginStorage("CatJam", {
-    opacity: 80
+	opacity: 80,
 });
 
 import element from ".";
 
 export const Settings = () => {
-    const [opacity, setOpacity] = React.useState(storage.opacity);
+	const [opacity, setOpacity] = React.useState(storage.opacity);
 
-    const onChange = React.useCallback((value: number) => {
-        element.style = `--catjam-opacity: ${value / 100};`;
-        setOpacity((storage.opacity = value));
-    }, []);
+	const onChange = React.useCallback((value: number) => {
+		element.style = `--catjam-opacity: ${value / 100};`;
+		setOpacity((storage.opacity = value));
+	}, []);
 
-    return (
-        <LunaSettings>
-            <LunaNumberSetting title="CatJam Opacity" desc="Adjust the opacity of the CatJam buddy" min={0} max={100} step={1} value={opacity} onNumber={onChange} />
-        </LunaSettings>
-    );
+	return (
+		<LunaSettings>
+			<LunaNumberSetting
+				title="CatJam Opacity"
+				desc="Adjust the opacity of the CatJam buddy"
+				min={0}
+				max={100}
+				step={1}
+				value={opacity}
+				onNumber={onChange}
+			/>
+		</LunaSettings>
+	);
 };

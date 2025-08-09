@@ -7,7 +7,11 @@
 */
 
 :root {
-	--blur-background: color-mix(in srgb, var(--wave-color-solid-base-brighter), transparent 60%);
+	--blur-background: color-mix(
+		in srgb,
+		var(--wave-color-solid-base-brighter),
+		transparent 60%
+	);
 	--blur-radius: 16px;
 }
 

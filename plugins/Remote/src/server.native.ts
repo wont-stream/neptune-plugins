@@ -1,9 +1,8 @@
-import { createServer } from "http";
+import html from "file://web/built/index.html";
+import { createServer } from "node:http";
 import { WebSocketServer } from "ws";
 
-import html from "file://web/built/index.html";
-
-const server = createServer((req, res) => {
+const server = createServer((_req, res) => {
 	res.writeHead(200, { "Content-Type": "text/html" });
 	res.end(html);
 });
