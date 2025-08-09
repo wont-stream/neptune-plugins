@@ -43,7 +43,7 @@ ws.onmessage = (event) => {
 				PlayState.setRepeatMode(data.mode);
 				break;
 			case "shuffle":
-				PlayState.setShuffle(data.shuffle);
+				PlayState.setShuffle(data.shuffle, true);
 				break;
 			default:
 				break;
