@@ -17,4 +17,4 @@ htmlText = (htmlText || "").replace(
 	`<script>${jsText}</script>`,
 );
 
-await Bun.write("./plugins/Remote/src/web/dist/index.html", htmlText);
+await Bun.write("./plugins/Remote/src/web/built/index.html", htmlText);

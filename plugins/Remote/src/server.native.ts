@@ -1,7 +1,7 @@
 import { createServer } from "http";
 import { WebSocketServer } from "ws";
 
-import html from "file://web/dist/index.html";
+import html from "file://web/built/index.html";
 
 const server = createServer((req, res) => {
 	res.writeHead(200, { "Content-Type": "text/html" });
