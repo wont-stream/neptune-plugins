@@ -1,1 +1,1 @@
-import "luna/buildPlugins";
+export * from "luna/buildPlugins";

@@ -1,35 +1,39 @@
 {
-	"name": "@seth/luna-plugins",
-	"description": "Plugins for Tidal Luna",
+	"name": "@seth/lunar",
 	"author": {
 		"name": "Seth",
 		"url": "https://github.com/wont-stream",
 		"avatarUrl": "https://github.com/wont-stream.png"
 	},
-	"homepage": "https://github.com/Inrixia/luna-plugins",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Inrixia/luna-plugins.git"
-	},
-	"type": "module",
-	"scripts": {
-		"watch": "concurrently npm:esWatch npm:serve",
-		"build": "rimraf ./dist && tsx esbuild.config.ts",
-		"esWatch": "rimraf ./dist && tsx ./esbuild.config.ts --watch",
-		"serve": "http-server ./dist -p 3000 -s --cors -c-1"
+		"url": "https://github.com/wont-stream/lunar.git"
 	},
 	"devDependencies": {
-		"@inrixia/helpers": "^3.20.0",
-		"@types/node": "^22.15.21",
-		"@types/react": "^19.1.5",
-		"@types/react-dom": "^19.1.5",
-		"concurrently": "^9.1.2",
-		"electron": "^36.2.1",
+		"@inrixia/helpers": "^3.20.3",
+		"@types/bun": "^1.2.19",
+		"@types/node": "^22.17.1",
+		"@types/react": "^19.1.9",
+		"@types/react-dom": "^19.1.7",
+		"concurrently": "^9.2.0",
+		"electron": "^36.7.4",
 		"http-server": "^14.1.1",
 		"luna": "github:inrixia/TidaLuna",
 		"oby": "^15.1.2",
 		"rimraf": "^6.0.1",
-		"tsx": "^4.19.4",
-		"typescript": "^5.8.3"
+		"tsx": "^4.20.3",
+		"typescript": "^5.9.2"
+	},
+	"description": "Plugins for Tidal Luna",
+	"homepage": "https://github.com/wont-stream/lunar",
+	"scripts": {
+		"watch": "concurrently npm:esWatch npm:serve",
+		"build": "rimraf ./dist && bun ./esbuild.config.ts",
+		"esWatch": "rimraf ./dist && bun ./esbuild.config.ts --watch",
+		"serve": "serve"
+	},
+	"type": "module",
+	"dependencies": {
+		"serve": "^14.2.4"
 	}
 }

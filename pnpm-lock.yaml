@@ -46,6 +46,7 @@ importers:
         version: 5.8.3
 
   plugins/CatJam: {}
+  plugins/Remote: {}
 
 packages:
 

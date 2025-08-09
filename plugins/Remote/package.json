@@ -1,0 +1,17 @@
+{
+	"name": "@seth/Remote",
+	"author": {
+		"name": "Seth",
+		"url": "https://github.com/wont-stream",
+		"avatarUrl": "https://github.com/wont-stream.png"
+	},
+	"main": "./src/index.ts",
+	"dependencies": {
+		"@types/ws": "^8.18.1",
+		"beercss": "^3.11.33",
+		"material-dynamic-colors": "^1.1.2",
+		"ws": "^8.18.3"
+	},
+	"description": "A remote control for your media.",
+	"type": "module"
+}
