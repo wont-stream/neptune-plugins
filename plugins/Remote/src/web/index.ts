@@ -90,7 +90,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	ws.onclose = () => {
 		console.log("WebSocket connection closed");
-		alert("Connection Lost\nWill retry after prompt closed");
 		location.reload();
 	};
 
