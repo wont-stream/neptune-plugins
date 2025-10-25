@@ -294,7 +294,7 @@ ipcRenderer.on(unloads, "client.playback.playersignal", async (data) => {
   const progress = Math.floor(Number(data.time));
 
   // Check if a significant skip in progress has occurred or if a significant time has passed
-  if (Math.abs(progress - lastProgress) >= 500) {
+  if (Math.abs(progress - lastProgress) >= 2) {
     syncTiming(currentTime, progress); // Synchronize video timing again
   }
   lastProgress = progress; // Update last known progress
