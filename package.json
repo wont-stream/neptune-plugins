@@ -28,8 +28,8 @@
   "homepage": "https://github.com/wont-stream/lunar",
   "scripts": {
     "watch": "concurrently npm:esWatch npm:serve",
-    "build": "rimraf ./dist && bun ./esbuild.config.ts",
-    "esWatch": "rimraf ./dist && bun ./esbuild.config.ts --watch",
+    "build": "rimraf ./dist && tsx ./esbuild.config.ts",
+    "esWatch": "rimraf ./dist && tsx ./esbuild.config.ts --watch",
     "serve": "serve"
   },
   "type": "module",
