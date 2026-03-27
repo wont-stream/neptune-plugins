@@ -1,9 +1,9 @@
 .CatJam {
 	position: relative;
-	top: -63px;
+	top: -52px;
 	left: -8px;
 	margin: 0 0 0 8px;
-	height: 64px;
+	height: 52px;
 	opacity: var(--catjam-opacity);
 	border-radius: var(--wave-border-radius--extra-small);
 }
